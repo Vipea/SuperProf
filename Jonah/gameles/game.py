@@ -1,7 +1,10 @@
 import pygame
 pygame.init () # start pygame library
 
-win = pygame.display.set_mode((500, 500))
+screen_width = 500
+screen_height = 500
+
+win = pygame.display.set_mode((screen_width, screen_height))
 
 x = 50
 y = 50
@@ -9,12 +12,15 @@ width = 40
 height = 60
 vel = 5 # how fast we go
 
+isJump = False # see if we are jumping
+jumpCoundt = 10
+
 # all pygame programs have main loop,
 # check for mouse events, movement, collision
 
 run = True # laat het spel rennen
 while run:
-    pygame.time.delay(100) # zodat spel niet te snel gaat
+    pygame.time.delay(20) # zodat spel niet te snel gaat
 
     # check for events, alles wat de gebruiker doet, bijv klikken
     for event in pygame.event.get():
@@ -27,17 +33,21 @@ while run:
     keys = pygame.key.get_pressed()
 
     # check wat er gedrukt is
-    if keys[pygame.K_LEFT]:
+
+    if keys[pygame.K_LEFT] and x > 0: # see if greater than 0 bc we dont want to move it off the screen, but then we can still move 5 pixels to -5 bc it is still allowed to move
         x -= vel
 
-    if keys[pygame.K_RIGHT]:
+    if keys[pygame.K_RIGHT] and x < screen_width - width:
         x+= vel
 
     if keys[pygame.K_UP]:
-        y -= vel
+        y -= vel and y > 0
 
     if keys[pygame.K_DOWN]:
-        y += vel
+        y += vel and y < screen_height - height
+
+    if keys[pygame.K_SPACE]:
+        pass
 
     # fill the screen before draw new rectangle
     win.fill((0,0,0))
