@@ -6,6 +6,8 @@ screen_height = 500
 
 win = pygame.display.set_mode((screen_width, screen_height))
 
+
+
 x = 50
 y = 50
 width = 40
@@ -13,7 +15,10 @@ height = 60
 vel = 5 # how fast we go
 
 isJump = False # see if we are jumping
-jumpCoundt = 10
+jumpCount = 10
+left = False
+right = False
+walkCount = 0
 
 # all pygame programs have main loop,
 # check for mouse events, movement, collision
@@ -40,15 +45,26 @@ while run:
     if keys[pygame.K_RIGHT] and x < screen_width - width:
         x+= vel
 
-    if keys[pygame.K_UP]:
-        y -= vel and y > 0
+    if not(isJump):
+        if keys[pygame.K_UP] and y > 0:
+            y -= vel
 
-    if keys[pygame.K_DOWN]:
-        y += vel and y < screen_height - height
+        if keys[pygame.K_DOWN] and y < screen_height - height:
+            y += vel
 
-    if keys[pygame.K_SPACE]:
-        pass
-
+        if keys[pygame.K_SPACE]:
+            isJump = True
+            # quadratic function to model jump in order to simulate jump gravity
+    else:
+        if jumpCount >= -10:
+            neg = 1
+            if jumpCount < 0:
+                neg = -1
+            y -= (jumpCount ** 2) * 0.5 * neg # we gonna start moving with 10**2, next one moves 9 ** 2, etc..
+            jumpCount -= 1
+        else: # jump has concluded, user can move up and down again
+            isJump = False
+            jumpCount = 10
     # fill the screen before draw new rectangle
     win.fill((0,0,0))
 
